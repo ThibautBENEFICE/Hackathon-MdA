@@ -36,7 +36,6 @@ class MLP():
         self.Wo = np.random.uniform(low=-0.01, high=0.01, size=(hidden_shape, output_shape))
         self.Bo = np.zeros(output_shape)
         self.learning_rate = learning_rate
-        return
 
     def forward(self, X):
         _,y_pred = self.forward_keep_activations(X)
@@ -75,3 +74,18 @@ class MLP():
     def predict(self, X): #TODO
         # Use final weights and biases to compute prediction for given input
         return np.argmax(self.forward(X))
+    
+    def load(self, path):
+        loaded = np.load(path)
+        self.Wh = loaded['Wh']
+        self.Bh = loaded['Bh']
+        self.Wo = loaded['Wo']
+        self.Bo = loaded['Bo']
+    
+    def save(self, number_of_save='0'):
+        np.savez_compressed("models/model_" + number_of_save,
+            Wh=self.Wh,
+            Bh=self.Bh,
+            Wo=self.Wo,
+            Bo=self.Bo)
+            
