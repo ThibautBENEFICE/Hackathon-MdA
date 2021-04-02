@@ -4,28 +4,31 @@ from read_pics import get_pics_from_file
 def from_key_to_vect(key):
     res = np.zeros(42)
     offset = 0
-    if key <= 'z' and key >= 'a':
-        res[key - 'a'] = 1
-    offset += 'z' - 'a'
-    if key <= '9' and key >= '0':
-        res[key - '0' + offset] = 1
-    offset += '9' - '0' + 1
-    if key == 'shift':
+    if len(key) == 1:
+        okey = ord(key[0])
+        if okey <= ord('Z') and okey >= ord('A'):
+            res[okey - ord('A')] = 1
+        offset += ord('Z') - ord('A')
+        if okey <= ord('9') and okey >= ord('0'):
+            res[okey - ord('0') + offset] = 1
+    else:
+        offset += 36
+        if key == 'SHIFT':
         res[offset] = 1
     offset += 1
-    if key == 'ctrl':
+        if key == 'CTRL':
         res[offset] = 1
     offset += 1
-    if key == 'space':
+        if key == 'SPACE':
         res[offset] = 1
     offset += 1
-    if key == 'enter':
+        if key == 'ENTER':
         res[offset] = 1
     offset += 1
-    if key == 'suppr':
+        if key == 'SUPPR':
         res[offset] = 1
     offset += 1
-    if key == 'nokey':
+        if key == 'NOKEY':
         res[offset] = 1
     return res
 
