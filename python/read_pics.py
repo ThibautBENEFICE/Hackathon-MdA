@@ -51,6 +51,7 @@ def get_pics_from_file(filename):
         tab_pics.append(pics)
         pics = read_double_tab(f_pic, info["nb_pics"])
     print("Nb trames: " + str(nb_trames))
+    info["nb_trames"] = nb_trames
     f_pic.close()
     return tab_pics, info
 
@@ -61,21 +62,14 @@ if __name__ == "__main__":
     ######### Pics ############
     # NO KEY
     plt.figure(1)
-    plt.subplot(211)
-    plt.plot(range(1,info["nb_pics"]+1), pics_nokey[0], 'ko')
-    plt.xlabel('numero de pic')
+    for i in range(100):
+        plt.subplot(211)
+        plt.plot(range(1,info["nb_pics"]+1), pics_nokey[i], 'ko')
+    plt.xlabel('numéro de pic')
     plt.ylabel('valeur du pic')
     plt.title('no key')
     plt.ylim(0, 1.5)
     plt.grid(b=True, which='both')
-    # PAD-0
-    plt.subplot(212)
-    plt.plot(range(1,info["nb_pics"]+1), pics_pad0[0], 'ko')
-    plt.xlabel('numero de pic')
-    plt.ylabel('valeur du pic')
-    plt.title('PAD-0')
-    plt.ylim(0, 1.5)
-    plt.grid(b=True, which='both')
-    #
+
     plt.show()
     
