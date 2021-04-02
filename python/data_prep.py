@@ -1,5 +1,6 @@
 import numpy as np
 from read_pics import get_pics_from_file
+from MLP import MLP
 
 def from_key_to_vect(key):
     res = np.zeros(42)
@@ -76,7 +77,19 @@ def init_train_frames():
 
 
 if __name__ == "__main__":
-    number_of_trainings = 500
     epoch = 0
-    print('number of trainings: ' + str(number_of_trainings) )
+    train_frames = init_train_frames()
+    mlp = MLP()
+
+    while epoch < 20000:
+        rand_key = np.random.randint(42)
+        train_frame = train_frames[rand_key]
+        trame = train_frame.get_next_train_frame()
+        expected = train_frame.key
+        mlp.train(trame, expected)
+        epoch += 1
     print('epoch: ' + str(epoch))
+
+    mlp.save()
+
+
