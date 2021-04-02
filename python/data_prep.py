@@ -15,22 +15,22 @@ def from_key_to_vect(key):
     else:
         offset += 36
         if key == 'SHIFT':
-        res[offset] = 1
-    offset += 1
+            res[offset] = 1
+        offset += 1
         if key == 'CTRL':
-        res[offset] = 1
-    offset += 1
+            res[offset] = 1
+        offset += 1
         if key == 'SPACE':
-        res[offset] = 1
-    offset += 1
+            res[offset] = 1
+        offset += 1
         if key == 'ENTER':
-        res[offset] = 1
-    offset += 1
+            res[offset] = 1
+        offset += 1
         if key == 'SUPPR':
-        res[offset] = 1
-    offset += 1
+            res[offset] = 1
+        offset += 1
         if key == 'NOKEY':
-        res[offset] = 1
+            res[offset] = 1
     return res
 
 class TrainFrame:
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         expected = train_frame.key
         mlp.train(trame, expected)
         epoch += 1
-    print('epoch: ' + str(epoch))
+        print('epoch: ' + str(epoch))
 
     mlp.save()
 
