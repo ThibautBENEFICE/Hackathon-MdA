@@ -39,11 +39,12 @@ class TrainFrame:
         self.tab = tab_pics
         self.passage_vect = np.zeros(info["nb_trames"])
         self.key = from_key_to_vect(key)
+        self.nb_trames = info["nb_trames"]
 
     def get_next_train_frame(self):
-        index = np.random.randint(0, info["nb_trames"])
+        index = np.random.randint(0, self.nb_trames - 1)
         while(self.passage_vect[index]):
-            index = np.random.randint(0, info["nb_trames"])
+            index = np.random.randint(0, self.nb_trames - 1)
         self.passage_vect[index] = 1
         return self.tab[index]
 
