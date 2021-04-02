@@ -36,6 +36,7 @@ class TrainFrame:
 
     def __init__(self, filename, key):
         tab_pics, info = get_pics_from_file(filename)
+        self.tab = {}
         self.tab = tab_pics
         self.passage_vect = np.zeros(info["nb_trames"])
         self.key = from_key_to_vect(key)
@@ -48,8 +49,28 @@ class TrainFrame:
         self.passage_vect[index] = 1
         return self.tab[index]
 
+def append_tf(train_frames, key):
+        filename ="../data/pics_" + key + ".bin"
+        tf = TrainFrame(filename, key)
+        train_frames.append(tf)
+
 def init_train_frames():
     train_frames = []
+
+    for i in range(26):
+        key = chr(ord('A') + i)
+        append_tf(train_frames, key)
+
+    for i in range(10):
+        key = chr(ord('0') + i)
+        append_tf(train_frames, key)
+
+    append_tf(train_frames, 'SHIFT')
+    append_tf(train_frames, 'CTRL')
+    append_tf(train_frames, 'SUPPR')
+    append_tf(train_frames, 'NOKEY')
+    append_tf(train_frames, 'ENTER')
+    append_tf(train_frames, 'SPACE')
 
     return train_frames
 
