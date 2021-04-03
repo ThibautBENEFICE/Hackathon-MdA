@@ -1,9 +1,12 @@
 import numpy as np
 
 def one_hot(move):
-    if type(move) is type(2):
-        return np.eye(8)[move] #TODO should be MLP.input_shape but hardcoding until better solution
-    return np.eye(move.shape[0])[np.argmax(move)]
+    array = np.zeros(42)
+    array[move] = 1
+    return array
+    #if type(move) is type(2):
+    #    return np.eye(42)[move] #TODO should be MLP.input_shape but hardcoding until better solution
+    #return np.eye(move.shape[0])[np.argmax(move)]
 
 def softmax_ind(X, ind):
     return np.exp(X[ind]) / np.sum(np.exp(X), axis=-1)
@@ -30,7 +33,7 @@ class MLP():
     Should be fed with a frame from the game and outputs a number between 0 and 7 corresponding
     to the direction the player should move in.
     """
-    def __init__(self, input_shape=17, hidden_shape=30, output_shape=42, learning_rate=0.0001): #FIXME maybe change lr
+    def __init__(self, input_shape=17, hidden_shape=40, output_shape=42, learning_rate=0.5): #FIXME maybe change lr
         self.Wh = np.random.uniform(low=-0.01, high=0.01, size=(np.prod(input_shape), hidden_shape))
         self.Bh = np.zeros(hidden_shape)
         self.Wo = np.random.uniform(low=-0.01, high=0.01, size=(hidden_shape, output_shape))
