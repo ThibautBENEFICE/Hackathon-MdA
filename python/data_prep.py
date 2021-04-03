@@ -1,6 +1,6 @@
 import numpy as np
 from read_pics import get_pics_from_file
-from MLP import MLP
+from MLP import MLP, one_hot
 
 def from_key_to_vect(key):
     res = np.zeros(42)
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     train_frames = init_train_frames()
     mlp = MLP()
 
-    while epoch < 20000:
+    while epoch < 250000:
         rand_key = np.random.randint(42)
         train_frame = train_frames[rand_key]
         trame = train_frame.get_next_train_frame()
@@ -90,6 +90,26 @@ if __name__ == "__main__":
         epoch += 1
         print('epoch: ' + str(epoch))
 
-    mlp.save()
+    #mlp.save()
 
-
+    epoch = 0
+    success = 0
+    f = open("..\success_rate.txt", "w")
+    while epoch < 20000:
+        rand_key = np.random.randint(42)
+        train_frame = train_frames[rand_key]
+        trame = train_frame.get_next_train_frame()
+        expected = train_frame.key 
+        predicted = mlp.predict(trame)
+        #print("expected: ", expected)
+        #print("predicted: ", one_hot(predicted))
+        tmp1 = ''.join(str(elt) for elt in one_hot(predicted))
+        tmp2 = ''.join(str(elt) for elt in expected)
+        if tmp1 == tmp2:
+            success += 1
+        epoch += 1
+        #print('epoch: ' + str(epoch))
+        if epoch % 1000 == 0:
+           f.write(str(success / epoch * 100) + "\n")
+           
+    f.close()
