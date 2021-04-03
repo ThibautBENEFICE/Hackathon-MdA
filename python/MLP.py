@@ -33,7 +33,10 @@ class MLP():
     Should be fed with a frame from the game and outputs a number between 0 and 7 corresponding
     to the direction the player should move in.
     """
-    def __init__(self, input_shape=17, hidden_shape=40, output_shape=42, learning_rate=0.5): #FIXME maybe change lr
+    def __init__(self, input_shape=17, hidden_shape=30, output_shape=42, learning_rate=0.1): #FIXME maybe change lr
+        self.input_shape = input_shape
+        self.hidden_shape = hidden_shape
+        self.output_shape = output_shape
         self.Wh = np.random.uniform(low=-0.01, high=0.01, size=(np.prod(input_shape), hidden_shape))
         self.Bh = np.zeros(hidden_shape)
         self.Wo = np.random.uniform(low=-0.01, high=0.01, size=(hidden_shape, output_shape))

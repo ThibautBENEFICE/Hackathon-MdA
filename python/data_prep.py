@@ -84,13 +84,15 @@ def init_train_frames():
 
 
 if __name__ == "__main__":
-    #epoch = 0
     train_frames = init_train_frames()
     mlp = MLP()
+    imax = 1
 
-    f = open("..\success_rate.txt", "w")
+    filename = "../test_results/i_" + str(imax) + "_lr_" + str(mlp.learning_rate).replace('.','_') + "_hs_" + str(mlp.hidden_shape) + ".txt"
+
+    f = open(filename, "w+")
     i = 0
-    while i < 10:
+    while i < imax:
         epoch = 0
         while epoch < 20000:
             rand_key = np.random.randint(42)
@@ -99,7 +101,7 @@ if __name__ == "__main__":
             expected = train_frame.key
             mlp.train(trame, expected)
             epoch += 1
-            print('epoch: ' + str(epoch))
+            print('epoch: ' + str(epoch) + " index:" + str(i))
         #mlp.save()
         f.write("Iteration " + str(i) +'\n')  
         epoch = 0
