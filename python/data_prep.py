@@ -2,6 +2,7 @@ import numpy as np
 from read_pics import get_pics_from_file
 from MLP import MLP, one_hot
 import progressbar
+import predict as pred
 
 def from_key_to_vect(key):
     res = np.zeros(42)
@@ -10,7 +11,7 @@ def from_key_to_vect(key):
         okey = ord(key[0])
         if okey <= ord('Z') and okey >= ord('A'):
             res[okey - ord('A')] = 1
-        offset += ord('Z') - ord('A')
+        offset = 26
         if okey <= ord('9') and okey >= ord('0'):
             res[okey - ord('0') + offset] = 1
     else:
@@ -82,16 +83,16 @@ def init_train_frames():
         key = chr(ord('A') + i)
         append_tf(train_frames, key)
 
-    for i in range(10):
-        key = chr(ord('0') + i)
+    for j in range(10):
+        key = chr(ord('0') + j)
         append_tf(train_frames, key)
 
     append_tf(train_frames, 'SHIFT')
     append_tf(train_frames, 'CTRL')
+    append_tf(train_frames, 'SPACE')
+    append_tf(train_frames, 'ENTER')
     append_tf(train_frames, 'SUPPR')
     append_tf(train_frames, 'NOKEY')
-    append_tf(train_frames, 'ENTER')
-    append_tf(train_frames, 'SPACE')
 
     return train_frames
 
@@ -117,7 +118,7 @@ def train(learning_count, mlp, bar):
         trame = train_frame.get_next_train_frame()
         expected = train_frame.key
         mlp.train(trame, expected)
-        if epoch % nb_step == 0:
+        if epoch % nb_step == 0 and bar:
             bar.update(bar.currval + 1)
         epoch += 1
     
@@ -147,7 +148,7 @@ if __name__ == "__main__":
     # Init neural network (input_shape, hidden_shape, output_shape, learning_rate)
     mlp = MLP(17, 30, 42, 0.1)
     # Nb of learning iteration to do
-    maximum_learning_iteration = 30
+    maximum_learning_iteration = 1
     # Nb of learning by iteration
     learning_count = 20000
     # Nb of tests by iteration
@@ -178,4 +179,12 @@ if __name__ == "__main__":
     f.close()
     print("Training finished. Accuracy record saved, PATH='" + filename +"'")
 
-    #mlp.save()
+    learning_iteration = 0
+    while learning_iteration < 2:
+        f = open(('R' + str(learning_iteration)), 'w+')
+        f.write(',  '.join(pred.predict_log_mdp_keys('../data/pics_LOGINMDP.bin', mlp)))
+        f.close()
+        train(learning_count, mlp, None)
+        learning_iteration += 1
+
+    mlp.save()
