@@ -34,6 +34,18 @@ def from_key_to_vect(key):
             res[offset] = 1
     return res
 
+def from_index_to_key(index):
+    key = ''
+    if index <= 25:
+        key = chr(ord('A') + index)
+    elif index <= 35:
+        key = chr(ord('0') + index)
+    else:
+        other_key = ['SHIFT','CTRL','SPACE','ENTER','SUPPR','NOKEY']
+        key = other_key[index - 36]
+    return key
+
+
 class TrainFrame:
 
     def __init__(self, filename, key):
