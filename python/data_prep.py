@@ -2,7 +2,7 @@ import numpy as np
 from read_pics import get_pics_from_file
 from MLP import MLP, one_hot
 import progressbar
-import predict as pred
+#import predict as pred
 
 def from_key_to_vect(key):
     res = np.zeros(42)
@@ -36,16 +36,12 @@ def from_key_to_vect(key):
     return res
 
 def from_index_to_key(index):
-    key = ''
-    if index <= 25:
-        key = chr(ord('A') + index)
-    elif index <= 35:
-        key = chr(ord('0') + index)
-    else:
-        other_key = ['SHIFT','CTRL','SPACE','ENTER','SUPPR','NOKEY']
-        key = other_key[index - 36]
-    return key
-
+    table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',\
+            'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',' R',\
+            'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0',\
+            '1', '2', '3', '4', '5', '6', '7', '8', '9',\
+            'SHIFT','CTRL','SPACE','ENTER','SUPPR','NOKEY']
+    return table[index] if (index <= 42 and index >= 0) else table[42] 
 
 class TrainFrame:
 
@@ -109,7 +105,7 @@ def create_header(mlp, maximum_learning_iteration, learning_count):
                         .replace("v3", str(learning_count))
     return header
 
-def train(learning_count, mlp, bar):
+def train(learning_count, train_frames, mlp, bar):
     epoch = 0
     nb_step = learning_count / 10
     while epoch < learning_count:
@@ -122,7 +118,7 @@ def train(learning_count, mlp, bar):
             bar.update(bar.currval + 1)
         epoch += 1
     
-def test(testing_count, testing_interval, mlp):
+def test(testing_count, testing_interval, train_frames, mlp):
     epoch = 0
     success = 0
     somme = 0
@@ -141,6 +137,14 @@ def test(testing_count, testing_interval, mlp):
             somme += success / epoch * 100
     return (somme / (testing_count / testing_interval))
 
+def predict_log_mdp_keys(log_filename, mlp):
+    log_keys = []
+    pics_log,_  = get_pics_from_file(log_filename)
+    for trame in pics_log:
+        key_index = mlp.predict(trame)
+        key = from_index_to_key(key_index)
+        log_keys.append(key)
+    return log_keys
 
 if __name__ == "__main__":
     train_frames = init_train_frames()
@@ -148,7 +152,7 @@ if __name__ == "__main__":
     # Init neural network (input_shape, hidden_shape, output_shape, learning_rate)
     mlp = MLP(17, 30, 42, 0.1)
     # Nb of learning iteration to do
-    maximum_learning_iteration = 1
+    maximum_learning_iteration = 50
     # Nb of learning by iteration
     learning_count = 20000
     # Nb of tests by iteration
@@ -169,9 +173,9 @@ if __name__ == "__main__":
 
     learning_iteration = 0
     while learning_iteration < maximum_learning_iteration:
-        train(learning_count, mlp, bar)
+        train(learning_count, train_frames, mlp, bar)
         f.write("Learning iteration " + str(learning_iteration + 1) + "\n")  
-        result = test(testing_count, testing_interval, mlp)
+        result = test(testing_count, testing_interval, train_frames, mlp)
         f.write("Accuracy = " + str(result.__round__(2)) + '%\n-\n')
         learning_iteration += 1
     
@@ -182,9 +186,9 @@ if __name__ == "__main__":
     learning_iteration = 0
     while learning_iteration < 2:
         f = open(('R' + str(learning_iteration)), 'w+')
-        f.write(',  '.join(pred.predict_log_mdp_keys('../data/pics_LOGINMDP.bin', mlp)))
+        f.write(',  '.join(predict_log_mdp_keys('../data/pics_LOGINMDP.bin', mlp)))
         f.close()
-        train(learning_count, mlp, None)
+        train(learning_count, train_frames, mlp, None)
         learning_iteration += 1
 
-    mlp.save()
+    #mlp.save()
