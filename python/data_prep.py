@@ -126,7 +126,7 @@ def test(testing_count, testing_interval, train_frames, mlp):
         rand_key = np.random.randint(42)
         train_frame = train_frames[rand_key]
         trame = train_frame.get_next_train_frame()
-        expected = train_frame.key 
+        expected = train_frame.key
         predicted = mlp.predict(trame)
         tmp1 = ''.join(str(elt) for elt in one_hot(predicted))
         tmp2 = ''.join(str(elt) for elt in expected)
@@ -150,9 +150,9 @@ if __name__ == "__main__":
     train_frames = init_train_frames()
     print("Initialization done. Starting learning phase, please wait...")
     # Init neural network (input_shape, hidden_shape, output_shape, learning_rate)
-    mlp = MLP(17, 30, 42, 0.1)
+    mlp = MLP(17, 40, 42, 0.1)
     # Nb of learning iteration to do
-    maximum_learning_iteration = 50
+    maximum_learning_iteration = 100
     # Nb of learning by iteration
     learning_count = 20000
     # Nb of tests by iteration
@@ -160,35 +160,38 @@ if __name__ == "__main__":
     # testing_count / testing_interval = Number of accuracy check by iteration
     testing_interval = 1000
 
-    # Open the file to write result and init it with header
-    filename = get_filename(maximum_learning_iteration, mlp)
-    f = open(filename, "w+")
-    f.write(create_header(mlp, maximum_learning_iteration, learning_count))
+    i = 0
+    while i < 10:
+        # Open the file to write result and init it with header
+        filename = get_filename(maximum_learning_iteration, mlp)
+        f = open(filename, "a")
+        f.write(create_header(mlp, maximum_learning_iteration, learning_count))
 
-    # Set up progress bar
-    bar_max_val = 10 * maximum_learning_iteration
-    bar = progressbar.ProgressBar(maxval=bar_max_val, \
-        widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
-    bar.start()
+        # Set up progress bar
+        bar_max_val = 10 * maximum_learning_iteration
+        bar = progressbar.ProgressBar(maxval=bar_max_val, \
+            widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+        bar.start()
 
-    learning_iteration = 0
-    while learning_iteration < maximum_learning_iteration:
-        train(learning_count, train_frames, mlp, bar)
-        f.write("Learning iteration " + str(learning_iteration + 1) + "\n")  
-        result = test(testing_count, testing_interval, train_frames, mlp)
-        f.write("Accuracy = " + str(result.__round__(2)) + '%\n-\n')
-        learning_iteration += 1
-    
-    bar.finish()
-    f.close()
-    print("Training finished. Accuracy record saved, PATH='" + filename +"'")
+        learning_iteration = 0
+        previous_result = 0
+        while learning_iteration < maximum_learning_iteration:
+            train(learning_count, train_frames, mlp, bar)
+            f.write("Learning iteration " + str(learning_iteration + 1) + "\n")
+            result = test(testing_count, testing_interval, train_frames, mlp)
+            if result <= previous_result:
+                mlp.learning_rate /= 2
+            previous_result = result
+            f.write("Accuracy = " + str(result.__round__(2)) + '%\n-\n')
+            learning_iteration += 1
 
-    learning_iteration = 0
-    while learning_iteration < 2:
-        f = open(('R' + str(learning_iteration)), 'w+')
+        bar.finish()
+        f.close()
+        print("Training finished. Accuracy record saved, PATH='" + filename +"'")
+
+        f = open(('R' + str(i)), 'w+')
         f.write(',  '.join(predict_log_mdp_keys('../data/pics_LOGINMDP.bin', mlp)))
         f.close()
-        train(learning_count, train_frames, mlp, None)
-        learning_iteration += 1
+        i += 1
 
     #mlp.save()
