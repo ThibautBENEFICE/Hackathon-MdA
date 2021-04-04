@@ -1,0 +1,6 @@
+-------------------------------------
+         Learning rate : v0
+          Hidden shape : v1
+    Maximum learning iteration : v2
+ Learning count by iteration : v3
+-------------------------------------
