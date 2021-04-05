@@ -1,0 +1,66 @@
+-------------------------------------
+         Learning rate : 0.3
+          Hidden shape : 40
+    Maximum learning iteration : 20
+ Learning count by iteration : 20000
+-------------------------------------
+Learning iteration 1
+Accuracy = 8.47%
+-
+Learning iteration 2
+Accuracy = 8.82%
+-
+Learning iteration 3
+Accuracy = 8.27%
+-
+Learning iteration 4
+Accuracy = 8.38%
+-
+Learning iteration 5
+Accuracy = 9.13%
+-
+Learning iteration 6
+Accuracy = 8.17%
+-
+Learning iteration 7
+Accuracy = 8.3%
+-
+Learning iteration 8
+Accuracy = 9.2%
+-
+Learning iteration 9
+Accuracy = 8.77%
+-
+Learning iteration 10
+Accuracy = 8.15%
+-
+Learning iteration 11
+Accuracy = 8.25%
+-
+Learning iteration 12
+Accuracy = 8.4%
+-
+Learning iteration 13
+Accuracy = 8.55%
+-
+Learning iteration 14
+Accuracy = 8.35%
+-
+Learning iteration 15
+Accuracy = 8.1%
+-
+Learning iteration 16
+Accuracy = 8.95%
+-
+Learning iteration 17
+Accuracy = 9.01%
+-
+Learning iteration 18
+Accuracy = 9.17%
+-
+Learning iteration 19
+Accuracy = 8.84%
+-
+Learning iteration 20
+Accuracy = 9.2%
+-
